@@ -26,11 +26,14 @@ class Button {
     //-----------------------------------------------------------------------------------------
     //Early returns
     //handle with many zero at start
-    if ( calculator.currentValue[0] === "0" && !current[1] && btn.value === "0" )  return;
+    if (calculator.currentValue[0] === "0" && !current[1] && btn.value === "0")
+      return;
     //handle with many dots
     if (btn.dataset.type === "decimal" && current.includes(".")) return;
     //add zero before '.'
     if (btn.value === ".") calculator.currentValue = "0";
+
+    if (!current && btn.dataset.type === "operand") return;
     //-----------------------------------------------------------------------------------------
     //if object properties filled and operand pressed calculate number
     //or calculate button pressed
@@ -41,12 +44,15 @@ class Button {
       calculator.currentValue = calculator.calculate(previous, current);
       calculator.previousValue = "";
       calculator.operand = btn.value;
+      if(btn.id==='calculate') calculator.state = true;
     }
     //-----------------------------------------------------------------------------------------
     //handle with first number
-    if (!current && btn.dataset.type === "operand") {
-      return;
-    } else if (btn.dataset.type !== "operand") {
+    if (btn.dataset.type !== "operand") {
+      if(calculator.state&&btn.id!== 'calculate'){
+        calculator.clear();
+        calculator.state = false;
+      }
       calculator.currentValue += btn.value;
       input.value = calculator.currentValue;
       readOnly.value += btn.value;
@@ -54,6 +60,7 @@ class Button {
     }
     //handle with operand and second number
     if (btn.dataset.type === "operand") {
+      if(calculator.state){calculator.state = false}
       calculator.previousValue = calculator.currentValue;
       calculator.operand = btn.value;
       readOnly.value += btn.value;
@@ -77,6 +84,7 @@ const calculator = {
   currentValue: "",
   previousValue: "",
   operand: "",
+  state:'',
   calculate(a, b) {
     switch (this.operand) {
       //summ
@@ -99,8 +107,8 @@ const calculator = {
   clear() {
     this.currentValue = "";
     this.previousValue = "";
-    this.operand = "";
-    input.value = 0;
+    this.operand = "0";
+    input.value = "0";
     readOnly.value = "";
     container.dataset.type = "";
   },
