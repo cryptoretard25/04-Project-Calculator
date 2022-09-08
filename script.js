@@ -21,51 +21,70 @@ class Button {
     event.preventDefault();
     const btn = this.element;
     btn.classList.add("pressed");
-    if (input.value === "0") input.value = '';
+    //if (input.value === "0") input.value = "";
+    const current = calculator.currentValue;
+    const previous = calculator.previousValue;
+    const operand = calculator.operand;
     //-----------------------------------------------------------------------------------------
-    if (calculate.length < 2) {
-      if (btn.dataset.type === "operand" && !input.value){ input.value = '0'; return};
-      if (btn.dataset.type === "number"|| btn.dataset.type ==='decimal') {
-        if(btn.dataset.type ==='decimal'&& input.value.includes('.')) return
-        input.value += btn.value;
-        readOnly.value += btn.value;
-        container.dataset.type = btn.dataset.type;
-      } else {
-        calculate[0] = input.value;
-        calculate[1] = btn.value;
-        input.value = "";
-        readOnly.value += btn.value;
-        container.dataset.type = btn.dataset.type;
-      }
-    } else {
-      if (container.dataset.type === "operand" && btn.dataset.type === "operand") return;
-      if (btn.dataset.type === "number" || btn.dataset.type === "decimal") {
-        if (btn.dataset.type === "decimal" && input.value.includes(".")) return;
-        if (input.value == calculate[0]) {
-          input.value = "";
-        }
-        input.value += btn.value;
-        readOnly.value += btn.value;
-        container.dataset.type = btn.dataset.type;
-      } else if (
-        (container.dataset.type = "number" && btn.dataset.type === "operand")
-      ) {
-        calculate[2] = input.value;
-        input.value = "";
-        readOnly.value += btn.value;
-        this.calculate(calculate[0], calculate[2]);
-        calculate[1] = btn.value;
-        input.value = calculate[0];
-        container.dataset.type = "operand";
-      }else if(btn.id === 'calculate'){
-        calculate[2] = input.value;
-        input.value = '';
-        this.calculate(calculate[0], calculate[2]);
-        input.value = calculate[0];
-        readOnly.value = calculate[0];
-        container.dataset.type = "number";
-      }
+    if (current && previous && operand) {
+      calculator.currentValue = this.calculate(previous, current);
     }
+    if (!current && btn.dataset.type === "operand") {
+      return;
+    } else if (btn.dataset.type !== "operand") {
+      calculator.currentValue += btn.value;
+      log(calculator);
+    }
+    if (btn.dataset.type === "operand") {
+      calculator.previousValue = calculator.currentValue;
+      calculator.operand = btn.value;
+      calculator.currentValue = "";
+      log(calculator);
+    }
+    //-----------------------------------------------------------------------------------------
+    // if (calculate.length < 2) {
+    //   if (btn.dataset.type === "operand" && !input.value){ input.value = '0'; return};
+    //   if (btn.dataset.type === "number"|| btn.dataset.type ==='decimal') {
+    //     if(btn.dataset.type ==='decimal'&& input.value.includes('.')) return
+    //     input.value += btn.value;
+    //     readOnly.value += btn.value;
+    //     container.dataset.type = btn.dataset.type;
+    //   } else {
+    //     calculate[0] = input.value;
+    //     calculate[1] = btn.value;
+    //     input.value = "";
+    //     readOnly.value += btn.value;
+    //     container.dataset.type = btn.dataset.type;
+    //   }
+    // } else {
+    //   if (container.dataset.type === "operand" && btn.dataset.type === "operand") return;
+    //   if (btn.dataset.type === "number" || btn.dataset.type === "decimal") {
+    //     if (btn.dataset.type === "decimal" && input.value.includes(".")) return;
+    //     if (input.value == calculate[0]) {
+    //       input.value = "";
+    //     }
+    //     input.value += btn.value;
+    //     readOnly.value += btn.value;
+    //     container.dataset.type = btn.dataset.type;
+    //   } else if (
+    //     (container.dataset.type = "number" && btn.dataset.type === "operand")
+    //   ) {
+    //     calculate[2] = input.value;
+    //     input.value = "";
+    //     readOnly.value += btn.value;
+    //     this.calculate(calculate[0], calculate[2]);
+    //     calculate[1] = btn.value;
+    //     input.value = calculate[0];
+    //     container.dataset.type = "operand";
+    //   }else if(btn.id === 'calculate'){
+    //     calculate[2] = input.value;
+    //     input.value = '';
+    //     this.calculate(calculate[0], calculate[2]);
+    //     input.value = calculate[0];
+    //     readOnly.value = calculate[0];
+    //     container.dataset.type = "number";
+    //   }
+    // }
     //-----------------------------------------------------------------------------------------
   }
   ontransition(event) {
@@ -73,9 +92,7 @@ class Button {
       this.element.classList.remove("pressed");
   }
   calculate(a, b) {
-    if (!a || !b) return;
-    calculate = [];
-    calculate.push(+a * +b);
+    return (a - b).toString();
   }
 }
 
@@ -83,31 +100,8 @@ buttons.forEach((button) => {
   window[`btn${button.id}`] = new Button(button);
 });
 
-// if (btn.id === "calculate") {
-// }
-// if (btn.id === "AC") {
-//   input.value = 0;
-//   inputReadOnly.value = "";
-// }
-// if (input.value === "0") {
-//   if (!btn.dataset.type) return;
-//   if (btn.dataset.type === "number") {
-//     input.value = btn.value;
-//     inputReadOnly.value = btn.value;
-//     btnContainer.dataset.type = btn.dataset.type;
-//   } else if (btn.dataset.type !== "number") {
-//     input.value += btn.value;
-//     inputReadOnly.value += btn.value;
-//     btnContainer.dataset.type = btn.dataset.type;
-//   }
-// } else if (btnContainer.dataset.type === "number") {
-//   input.value += btn.value;
-//   inputReadOnly.value += btn.value;
-//   btnContainer.dataset.type = btn.dataset.type;
-// } else if (!btnContainer.dataset.type !== "number") {
-//   if (!btn.dataset.type) return;
-//   if (btn.dataset.type !== "number") return;
-//   input.value += btn.value;
-//   inputReadOnly.value += btn.value;
-//   btnContainer.dataset.type = btn.dataset.type;
-// }
+const calculator = {
+  currentValue: "",
+  previousValue: "",
+  operand: "",
+};
