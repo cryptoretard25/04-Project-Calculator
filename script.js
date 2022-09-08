@@ -21,23 +21,40 @@ class Button {
     event.preventDefault();
     const btn = this.element;
     btn.classList.add("pressed");
-    //if (input.value === "0") input.value = "";
+
     const current = calculator.currentValue;
     const previous = calculator.previousValue;
     const operand = calculator.operand;
     //-----------------------------------------------------------------------------------------
-    if (current && previous && operand) {
+    //handle with many zero at start
+    if (current[0] === "0" && !current[1] && btn.value === "0") return;
+    //handle with many dots
+    if (btn.dataset.type === "decimal" && current.includes(".")) return;
+    //add zero before '.'
+    if (btn.value === ".") calculator.currentValue = "0";
+    //-----------------------------------------------------------------------------------------
+    //if object properties filled and operand pressed calculate number
+    if (current && previous && operand && btn.dataset.type === "operand") {
       calculator.currentValue = this.calculate(previous, current);
+      calculator.previousValue = "";
+      calculator.operand = btn.value;
     }
+    //-----------------------------------------------------------------------------------------
+    
     if (!current && btn.dataset.type === "operand") {
       return;
     } else if (btn.dataset.type !== "operand") {
+      input.value = btn.value;
       calculator.currentValue += btn.value;
+      input.value = calculator.currentValue;
+      readOnly.value += btn.value;
       log(calculator);
     }
     if (btn.dataset.type === "operand") {
       calculator.previousValue = calculator.currentValue;
       calculator.operand = btn.value;
+      readOnly.value += btn.value;
+      input.value = calculator.previousValue;
       calculator.currentValue = "";
       log(calculator);
     }
@@ -92,7 +109,7 @@ class Button {
       this.element.classList.remove("pressed");
   }
   calculate(a, b) {
-    return (a - b).toString();
+    return (+a + +b).toString();
   }
 }
 
