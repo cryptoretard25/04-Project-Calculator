@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,8 +8,53 @@
     <title>Calculator</title>
     <script defer src="script.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link href='https://fonts.googleapis.com/css?family=Press Start 2P' rel='stylesheet'>
 </head>
+
 <body>
-    
+    <h1>Calculator</h1>
+    <div class="flex-container">
+        <div class="input-container">
+            <div class="input-wrapper">
+            <input readonly type="text" class="text-input" id="storage-input" value="">
+            <input type="text" class="text-input" id="main-input" value="0">
+            </div>
+        </div>
+        <div class="btn-container">
+            <!-- clear all -->
+            <button class="btn" id="AC">AC</button>
+            <!-- clear one -->
+            <button class="btn" id="C">C</button>
+            <!-- operand -->
+            <button class="btn" data-type="operand" id="mul" value="*">×</button>
+            <button class="btn" data-type="operand" id="div" value="/">÷</button>
+            <!-- number -->
+            <button class="btn" data-type="number" id="seven" value="7">7</button>
+            <button class="btn" data-type="number"  id="eight" value="8">8</button>
+            <button class="btn" data-type="number"  id="nine" value="9">9</button>
+            <!-- operand -->
+            <button class="btn" data-type="operand" id="add" value="+">+</button>
+            <!-- number -->
+            <button class="btn" data-type="number"  id="four" value="4">4</button>
+            <button class="btn" data-type="number"  id="five" value="5">5</button>
+            <button class="btn" data-type="number"  id="six" value="6">6</button>
+            <!-- operand -->
+            <button class="btn" data-type="operand" id="sub" value="-">-</button>
+            <!-- number -->
+            <button class="btn" data-type="number"  id="one" value="1">1</button>
+            <button class="btn" data-type="number"  id="two" value="2">2</button>
+            <button class="btn" data-type="number" id="three" value="3">3</button>
+
+            <button class="btn"  id="calculate">=</button>
+            <!-- number -->
+            <button class="btn" data-type="number"  id="zero" value="0">0</button>
+            <!-- decimal -->
+            <button class="btn" data-type="decimal" id="dot" value=".">.</button>
+            <!-- operand -->
+            <button class="btn" data-type="operand" id="percent">%</button>
+        </div>
+
+    </div>
 </body>
+
 </html>
