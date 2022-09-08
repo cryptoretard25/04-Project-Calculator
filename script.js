@@ -20,18 +20,15 @@ class Button {
     event.preventDefault();
     const btn = this.element;
     btn.classList.add("pressed");
-
     const current = calculator.currentValue;
     const previous = calculator.previousValue;
     const operand = calculator.operand;
     //-----------------------------------------------------------------------------------------
     //Early returns
     //handle with many zero at start
-    if (current[0] === "0" && !current[1] && btn.value === "0") return;
+    if ( calculator.currentValue[0] === "0" && !current[1] && btn.value === "0" )  return;
     //handle with many dots
     if (btn.dataset.type === "decimal" && current.includes(".")) return;
-    //if 1st number is empty operand button unavaliable
-    if (!current && btn.dataset.type === "operand") return;
     //add zero before '.'
     if (btn.value === ".") calculator.currentValue = "0";
     //-----------------------------------------------------------------------------------------
@@ -41,14 +38,15 @@ class Button {
       (current && previous && operand && btn.dataset.type === "operand") ||
       btn.id === "calculate"
     ) {
-      calculator.currentValue = this.calculate(previous, current);
+      calculator.currentValue = calculator.calculate(previous, current);
       calculator.previousValue = "";
       calculator.operand = btn.value;
     }
     //-----------------------------------------------------------------------------------------
     //handle with first number
-    if (btn.dataset.type !== "operand") {
-      input.value = btn.value;
+    if (!current && btn.dataset.type === "operand") {
+      return;
+    } else if (btn.dataset.type !== "operand") {
       calculator.currentValue += btn.value;
       input.value = calculator.currentValue;
       readOnly.value += btn.value;
@@ -69,9 +67,6 @@ class Button {
     if (event.propertyName === "transform")
       this.element.classList.remove("pressed");
   }
-  calculate(a, b) {
-    return (+a + +b).toString();
-  }
 }
 
 buttons.forEach((button) => {
@@ -82,4 +77,31 @@ const calculator = {
   currentValue: "",
   previousValue: "",
   operand: "",
+  calculate(a, b) {
+    switch (this.operand) {
+      //summ
+      case "+":
+        return +a + +b;
+      //sub
+      case "-":
+        return +a - +b;
+      //mul
+      case "*":
+        return +a * +b;
+      //div
+      case "/":
+        return +a / +b;
+      //percent
+      case "%":
+        return (+a / 100) * +b;
+    }
+  },
+  clear() {
+    this.currentValue = "";
+    this.previousValue = "";
+    this.operand = "";
+    input.value = 0;
+    readOnly.value = "";
+    container.dataset.type = "";
+  },
 };
