@@ -1,113 +1,177 @@
 const { log } = console;
 
 const buttons = document.querySelectorAll(".btn");
-const container = document.querySelector(".btn-container");
-const input = document.querySelector("#main-input");
-const readOnly = document.querySelector("#storage-input");
-let calculate = [];
+const inputIn = document.querySelector("#input-in");
+const inputOut = document.querySelector("#input-out");
+
+class Calculator {
+  constructor(inputIn, inputOut) {
+    this.inputIn = inputIn;
+    this.inputOut = inputOut;
+    this.current = "";
+    this.previous = "";
+    this.sign = "";
+    this.finished = false;
+  }
+  clear() {
+    this.current = "";
+    this.previous = "";
+    this.sign = undefined;
+    this.finished = false;
+    this.inputOut.value = "";
+    this.inputIn.value = 0;
+  }
+  delete() {
+    if (this.current.length) {
+      this.current = this.current.slice(0, -1);
+      this.inputOut.value = this.inputOut.value.slice(0, -1);
+      this.inputIn.value = this.current || 0;
+    }
+    if (this.finished) this.clear();
+  }
+  //if !current and sign pressed current==='0'
+  appendZero() {
+    if (!this.current) {
+      this.inputOut.value += "0";
+      this.current = "0";
+    }
+  }
+  chooseOperation(element) {
+    this.finished = false;
+    this.sign = element.textContent;
+    this.previous = calculator.current;
+    this.current = "";
+  }
+  updateDisplay(element) {
+    this.inputIn.value = "";
+    this.inputIn.value = this.current;
+    this.inputOut.value += element.textContent;
+  }
+  processBugs(element) {
+    const btnText = element.textContent;
+    // add zero before dot if dot is the first character
+    if (btnText === "." && !this.current) {
+      this.current = '0';
+      this.inputOut.value += '0';
+    }
+    // leading zeros '0000' '02' bug
+    if (btnText !== "." && this.current[0] === "0" && !this.current[1]) {
+      this.current = "";
+      this.inputOut.value = this.inputOut.value.slice(0, -1);
+    }
+  }
+  compute() {
+    const a = this.previous;
+    const b = this.current;
+    const sign = this.sign;
+    this.finished = true;
+    this.sign = undefined;
+    this.previous = "";
+    switch (sign) {
+      //summ
+      case "+":
+        return (+a + +b).toString();
+      //sub
+      case "-":
+        return (+a - +b).toString();
+      //mul
+      case "×":
+        return (+a * +b).toString();
+      //div
+      case "÷":
+        if (b == 0) {
+          this.current = "";
+          this.previous = "";
+          this.sign = undefined;
+          this.finished = true;
+          return "Cant divide by zero";
+        }
+        return (+a / +b).toString();
+      //percent
+      case "%":
+        return ((+a / 100) * +b).toString();
+    }
+  }
+}
 
 class Button {
   constructor(element) {
     this.element = element;
     // binding this for object
-    this.onclickHandler = this.onclick.bind(this);
+    this.onclickHandler = this.onmouseclick.bind(this);
     this.ontransitionHandler = this.ontransition.bind(this);
+    this.onkeydownHandler = this.onkeydown.bind(this);
 
+    window.addEventListener("keydown", this.onkeydownHandler);
     this.element.addEventListener("click", this.onclickHandler);
     this.element.addEventListener("transitionend", this.ontransitionHandler);
   }
-
-  onclick(event) {
+  //KEYBOARD SUPPORT
+  onkeydown(event) {
+    const btn = this.element;
+    event.preventDefault();
+    if (event.key === btn.value) {
+      btn.click();
+      btn.classList.add("pressed");
+    }
+  }
+  //ONCLICK HANDLER
+  onmouseclick(event) {
     event.preventDefault();
     const btn = this.element;
-    btn.classList.add("pressed");
-    if (input.value === "0") input.value = '';
-    //-----------------------------------------------------------------------------------------
-    if (calculate.length < 2) {
-      if (btn.dataset.type === "operand" && !input.value){ input.value = '0'; return};
-      if (btn.dataset.type === "number"|| btn.dataset.type ==='decimal') {
-        if(btn.dataset.type ==='decimal'&& input.value.includes('.')) return
-        input.value += btn.value;
-        readOnly.value += btn.value;
-        container.dataset.type = btn.dataset.type;
+
+    //* CLEAR button logic
+    if (btn.dataset.type === "clear") {
+      calculator.clear();
+    }
+    //* DELETE button logic
+    if (btn.dataset.type === "del") {
+      calculator.delete();
+
+      log(calculator);
+    }
+    //* NUMBER buttons logic
+    if (btn.dataset.type === "number") {
+      // printing more then one dot bug
+      if (btn.textContent === "." && calculator.current.includes(".")) return;
+      //
+      calculator.processBugs(btn);
+      // enter number
+      if (calculator.finished) calculator.clear();
+      calculator.current += btn.textContent;
+      calculator.updateDisplay(btn);
+
+      log(calculator);
+    }
+    //* OPERATOR button logic
+    if (btn.dataset.type === "sign") {
+      calculator.appendZero();
+      //compute
+      if (calculator.current && calculator.sign && calculator.previous) {
+        calculator.current = calculator.compute();
+        calculator.inputIn.value = calculator.current;
+
+        log(calculator);
       } else {
-        calculate[0] = input.value;
-        calculate[1] = btn.value;
-        input.value = "";
-        readOnly.value += btn.value;
-        container.dataset.type = btn.dataset.type;
-      }
-    } else {
-      if (container.dataset.type === "operand" && btn.dataset.type === "operand") return;
-      if (btn.dataset.type === "number" || btn.dataset.type === "decimal") {
-        if (btn.dataset.type === "decimal" && input.value.includes(".")) return;
-        if (input.value == calculate[0]) {
-          input.value = "";
-        }
-        input.value += btn.value;
-        readOnly.value += btn.value;
-        container.dataset.type = btn.dataset.type;
-      } else if (
-        (container.dataset.type = "number" && btn.dataset.type === "operand")
-      ) {
-        calculate[2] = input.value;
-        input.value = "";
-        readOnly.value += btn.value;
-        this.calculate(calculate[0], calculate[2]);
-        calculate[1] = btn.value;
-        input.value = calculate[0];
-        container.dataset.type = "operand";
-      }else if(btn.id === 'calculate'){
-        calculate[2] = input.value;
-        input.value = '';
-        this.calculate(calculate[0], calculate[2]);
-        input.value = calculate[0];
-        readOnly.value = calculate[0];
-        container.dataset.type = "number";
+        //choose operation
+        if (!calculator.current || btn.textContent === "=" || calculator.sign)
+          return;
+        calculator.updateDisplay(btn);
+        calculator.chooseOperation(btn);
+
+        log(calculator);
       }
     }
-    //-----------------------------------------------------------------------------------------
   }
+
   ontransition(event) {
-    if (event.propertyName === "transform")
-      this.element.classList.remove("pressed");
-  }
-  calculate(a, b) {
-    if (!a || !b) return;
-    calculate = [];
-    calculate.push(+a * +b);
+    if (event.propertyName !== "transform") return;
+    this.element.classList.remove("pressed");
   }
 }
+
+const calculator = new Calculator(inputIn, inputOut);
 
 buttons.forEach((button) => {
   window[`btn${button.id}`] = new Button(button);
 });
-
-// if (btn.id === "calculate") {
-// }
-// if (btn.id === "AC") {
-//   input.value = 0;
-//   inputReadOnly.value = "";
-// }
-// if (input.value === "0") {
-//   if (!btn.dataset.type) return;
-//   if (btn.dataset.type === "number") {
-//     input.value = btn.value;
-//     inputReadOnly.value = btn.value;
-//     btnContainer.dataset.type = btn.dataset.type;
-//   } else if (btn.dataset.type !== "number") {
-//     input.value += btn.value;
-//     inputReadOnly.value += btn.value;
-//     btnContainer.dataset.type = btn.dataset.type;
-//   }
-// } else if (btnContainer.dataset.type === "number") {
-//   input.value += btn.value;
-//   inputReadOnly.value += btn.value;
-//   btnContainer.dataset.type = btn.dataset.type;
-// } else if (!btnContainer.dataset.type !== "number") {
-//   if (!btn.dataset.type) return;
-//   if (btn.dataset.type !== "number") return;
-//   input.value += btn.value;
-//   inputReadOnly.value += btn.value;
-//   btnContainer.dataset.type = btn.dataset.type;
-// }
