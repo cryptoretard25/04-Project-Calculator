@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
-    <script defer src="script3.js"></script>
+    <script defer src="script.js"></script>
     <link rel="stylesheet" href="style.css">
     <link href='https://fonts.googleapis.com/css?family=Press Start 2P' rel='stylesheet'>
 </head>
@@ -16,44 +16,43 @@
     <div class="flex-container">
         <div class="input-container">
             <div class="input-wrapper">
-            <input readonly type="text" class="text-input" id="storage-input" value="">
-            <input type="text" class="text-input" id="main-input" value="0">
+                <input readonly type="text" class="text-input" id="input-out" value="">
+                <input type="text" class="text-input" id="input-in" value="0">
             </div>
         </div>
         <div class="btn-container">
             <!-- clear all -->
-            <button class="btn" id="AC">AC</button>
+            <button class="btn" data-type="clear" value="Delete" id="clear">AC</button>
             <!-- clear one -->
-            <button class="btn" id="C">C</button>
+            <button class="btn" data-type="del" value="Backspace" id="delete">C</button>
             <!-- operand -->
-            <button class="btn" data-type="operand" id="mul" value="*">×</button>
-            <button class="btn" data-type="operand" id="div" value="/">÷</button>
+            <button class="btn" data-type="sign" value="*" id="mul">×</button>
+            <button class="btn" data-type="sign"  value="/" id="div">÷</button>
             <!-- number -->
-            <button class="btn" data-type="number" id="seven" value="7">7</button>
-            <button class="btn" data-type="number"  id="eight" value="8">8</button>
-            <button class="btn" data-type="number"  id="nine" value="9">9</button>
+            <button class="btn" data-type="number"  value="7" id="seven">7</button>
+            <button class="btn" data-type="number"  value="8" id="eight">8</button>
+            <button class="btn" data-type="number"  value="9" id="nine">9</button>
             <!-- operand -->
-            <button class="btn" data-type="operand" id="add" value="+">+</button>
+            <button class="btn" data-type="sign"  value="+" id="add">+</button>
             <!-- number -->
-            <button class="btn" data-type="number"  id="four" value="4">4</button>
-            <button class="btn" data-type="number"  id="five" value="5">5</button>
-            <button class="btn" data-type="number"  id="six" value="6">6</button>
+            <button class="btn" data-type="number"  value="4" id="four">4</button>
+            <button class="btn" data-type="number"  value="5" id="five">5</button>
+            <button class="btn" data-type="number"  value="6" id="six">6</button>
             <!-- operand -->
-            <button class="btn" data-type="operand" id="sub" value="-">-</button>
+            <button class="btn" data-type="sign"  value="-" id="sub">-</button>
             <!-- number -->
-            <button class="btn" data-type="number"  id="one" value="1">1</button>
-            <button class="btn" data-type="number"  id="two" value="2">2</button>
-            <button class="btn" data-type="number" id="three" value="3">3</button>
+            <button class="btn" data-type="number"  value="1" id="one">1</button>
+            <button class="btn" data-type="number"  value="2" id="two">2</button>
+            <button class="btn" data-type="number"  value="3" id="three">3</button>
 
-            <button class="btn" id="calculate" data-type="operand">=</button>
+            <button class="btn" data-type="sign"  value="Enter" id="calculate">=</button>
             <!-- number -->
-            <button class="btn" data-type="number"  id="zero" value="0">0</button>
+            <button class="btn" data-type="number"  value="0" id="zero">0</button>
             <!-- decimal -->
-            <button class="btn" data-type="decimal" id="dot" value=".">.</button>
+            <button class="btn" data-type="number"  value="." id="dot">.</button>
             <!-- operand -->
-            <button class="btn" data-type="operand" id="percent" value="%">%</button>
+            <button class="btn" data-type="sign"  value="%" id="percent">%</button>
         </div>
-
     </div>
 </body>
 
