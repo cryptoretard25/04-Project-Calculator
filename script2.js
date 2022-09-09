@@ -1,7 +1,6 @@
 const { log } = console;
 
 const buttons = document.querySelectorAll(".btn");
-const container = document.querySelector(".btn-container");
 const input = document.querySelector("#main-input");
 const readOnly = document.querySelector("#storage-input");
 
@@ -26,15 +25,8 @@ class Button {
         calculator.clear();
         log(calculator);
       } else {
-        if (
-          calculator.current[0] === "0" &&
-          !calculator.current[1] &&
-          btn.dataset.type === "number"
-        ) {
-          calculator.current = btn.value;
-          input.value = calculator.current;
-          readOnly.value += btn.value;
-          log(calculator);
+        if ( calculator.current[0] === "0" && !calculator.current[1] && btn.dataset.type === "number" ) {
+    
         } else {
           calculator.current += btn.value;
           input.value = calculator.current;

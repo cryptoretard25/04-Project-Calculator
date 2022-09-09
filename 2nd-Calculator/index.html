@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <script defer src="script3.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://fonts.googleapis.com/css?family=Press Start 2P' rel='stylesheet'>
+</head>
+
+<body>
+    <h1>Calculator</h1>
+    <div class="flex-container">
+        <div class="input-container">
+            <div class="input-wrapper">
+                <input readonly type="text" class="text-input" id="input-out" value="">
+                <input type="text" class="text-input" id="input-in" value="0">
+            </div>
+        </div>
+        <div class="btn-container">
+            <!-- clear all -->
+            <button class="btn" data-type="clear" id="clear">AC</button>
+            <!-- clear one -->
+            <button class="btn" data-type="del" id="delete">C</button>
+            <!-- operand -->
+            <button class="btn" data-type="sign" id="mul">×</button>
+            <button class="btn" data-type="sign" id="div">÷</button>
+            <!-- number -->
+            <button class="btn" data-type="number" id="seven">7</button>
+            <button class="btn" data-type="number" id="eight">8</button>
+            <button class="btn" data-type="number" id="nine">9</button>
+            <!-- operand -->
+            <button class="btn" data-type="sign" id="add">+</button>
+            <!-- number -->
+            <button class="btn" data-type="number" id="four">4</button>
+            <button class="btn" data-type="number" id="five">5</button>
+            <button class="btn" data-type="number" id="six">6</button>
+            <!-- operand -->
+            <button class="btn" data-type="sign" id="sub">-</button>
+            <!-- number -->
+            <button class="btn" data-type="number" id="one">1</button>
+            <button class="btn" data-type="number" id="two">2</button>
+            <button class="btn" data-type="number" id="three">3</button>
+
+            <button class="btn" data-type="sign" id="calculate">=</button>
+            <!-- number -->
+            <button class="btn" data-type="number" id="zero">0</button>
+            <!-- decimal -->
+            <button class="btn" data-type="number" id="dot">.</button>
+            <!-- operand -->
+            <button class="btn" data-type="sign" id="percent">%</button>
+        </div>
+
+    </div>
+</body>
+
+</html>
