@@ -31,9 +31,11 @@ class Calculator {
   }
   //if !current and sign pressed current==='0'
   appendZero() {
-    if (!this.current) {
+    if (!this.current && !this.previous && !this.sign) {
       this.inputOut.value += "0";
       this.current = "0";
+    } else {
+      return;
     }
   }
   chooseOperation(element) {
@@ -51,8 +53,8 @@ class Calculator {
     const btnText = element.textContent;
     // add zero before dot if dot is the first character
     if (btnText === "." && !this.current) {
-      this.current = '0';
-      this.inputOut.value += '0';
+      this.current = "0";
+      this.inputOut.value += "0";
     }
     // leading zeros '0000' '02' bug
     if (btnText !== "." && this.current[0] === "0" && !this.current[1]) {
@@ -127,14 +129,12 @@ class Button {
     //* DELETE button logic
     if (btn.dataset.type === "del") {
       calculator.delete();
-
-      log(calculator);
     }
     //* NUMBER buttons logic
     if (btn.dataset.type === "number") {
       // printing more then one dot bug
       if (btn.textContent === "." && calculator.current.includes(".")) return;
-      //
+      // process 
       calculator.processBugs(btn);
       // enter number
       if (calculator.finished) calculator.clear();
