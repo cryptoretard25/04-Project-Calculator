@@ -165,8 +165,7 @@ class Button {
   }
 
   ontransition(event) {
-    if (event.propertyName !== "transform") return;
-    this.element.classList.remove("pressed");
+    if (event.propertyName === "transform") this.element.classList.remove("pressed");
   }
 }
 
